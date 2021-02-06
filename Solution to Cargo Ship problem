@@ -1,0 +1,126 @@
+**Cargo-Dropping-Ships
+
+There is a cargo ship that contains an unlimited amount of cargo in it. The ship is ready to sail and you have a list of N non-negative integers which denotes the water level in the sea at the ith points. A wave is defined as the continuously decreasing water level or continuously increasing water level.
+
+Let A= [1,2,6,4,2,3,1,8,9,7], it has 6 waves in it [1,2,6],[6,4,2],[2,3],[3,1],[1,8,9],[9,7]
+
+The amount of cargo that falls into the sea is equal to the product of the smallest height of the wave and length of the wave. 
+You have to find the total amount of cargo which falls into the sea. 
+
+NOTE: No two adjacent value will be equal in the list.
+
+Input:
+First-line contains T-number of TestCases. Then for every test case,
+	•	1st line contains a non-negative integer N.
+	•	The next line contains a list of N space-separated integer denoting the water level at the ith point.
+
+Output:
+The total amount of cargo that falls into the sea. 
+
+Constraints:
+1 <= T <= 1e3
+2 <= N <= 1e5
+1 <= A[i] <= 1e5
+
+Note: The sum of N in a test would not exceed 1e10
+
+Sample test cases:
+
+1
+10
+1 2 6 4 2 3 1 8 9 7
+
+Sample output:32
+** 
+
+Solution:
+
+
+    public class Solution {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner sc = new Scanner(System.in);
+		int noOfTestCase = sc.nextInt();
+
+		int[][] arr = new int[noOfTestCase][];
+
+		for (int t = 0; t < noOfTestCase; t++) {
+			int noOfElementsinArray = sc.nextInt();
+			arr[t] = new int[noOfElementsinArray];
+			for (int n = 0; n < noOfElementsinArray; n++) {
+				int a = sc.nextInt();
+				arr[t][n] = a;
+			}
+
+		}
+
+		for (int t = 0; t < noOfTestCase; t++) {
+			int len = arr[t].length;
+			//I have created a map so that it will store the sequence of waves like [1,2,6],[6,4,2]....
+			//against a key(normal 1,2,3...)
+			Map<Integer, List<Integer>> res = new HashMap<>();
+
+			int n = 0;
+			List<Integer> li = null;
+			int key1 = 0;
+			while (n + 1 < len) {
+				if (arr[t][n] < arr[t][n + 1]) {
+					li = null;
+					li = new ArrayList<>();
+					// check and continue while elements are continuing in increasing order
+					while (n + 1 < len && arr[t][n] < arr[t][n + 1]) {
+						li.add(new Integer(arr[t][n]));
+						n++;
+
+					}
+					li.add(new Integer(arr[t][n]));
+
+					res.put(++key1, li);
+
+					//start from the breakpoint now
+					continue;
+				} else {// only else block and not else if block because no adjacent elements will be
+					// same
+					li = null;
+					li = new ArrayList<>();
+					// //check and continue while elements are continuing in decreasing order
+					while (n + 1 < len && arr[t][n] > arr[t][n + 1]) {
+						li.add(new Integer(arr[t][n]));
+						n++;
+
+					}
+					li.add(new Integer(arr[t][n]));
+
+					res.put(++key1, li);
+					// start from the breakpoint now
+
+					continue;
+				}
+
+			}
+
+			int finalResult = 0;
+			Set<Integer> st = new LinkedHashSet<>();
+			st = res.keySet();
+			Iterator<Integer> iter = st.iterator();
+
+			while (iter.hasNext()) {
+				List<Integer> temp = res.get(iter.next());
+				Collections.sort(temp);
+
+				finalResult += temp.get(0) * temp.size();
+
+			}
+			System.out.println(finalResult);
+
+		}
+	}
+}
+
+
+Any optimisations/improvements will be appreciated.
+
+
+
+
